@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,8 +32,8 @@ public class BackgroundUtil {
     public static final int BKGMETHOD_GETRUNNING_TASK = 0;
     public static final int BKGMETHOD_GETRUNNING_PROCESS = 1;
     public static final int BKGMETHOD_GETAPPLICATION_VALUE = 2;
-    public static final int BKGMETHOD_GETUSAGESTATS = 3;
-    public static final int BKGMETHOD_GETACCESSIBILITYSERVICE = 4;
+    public static final int BKGMETHOD_GETUSAGESTATS = 3;//准 开启使用情况访问权限
+    public static final int BKGMETHOD_GETACCESSIBILITYSERVICE = 4;//准 开启无障碍
     public static final int BKGMETHOD_GETLINUXPROCESS = 5;
 
 
@@ -116,7 +117,9 @@ public class BackgroundUtil {
      * 方法4：通过使用UsageStatsManager获取，此方法是ndroid5.0A之后提供的API
      * 必须：
      * 1. 此方法只在android5.0以上有效
-     * 2. AndroidManifest中加入此权限<uses-permission xmlns:tools="http://schemas.android.com/tools" android:name="android.permission.PACKAGE_USAGE_STATS"
+     * 2. AndroidManifest中加入此权限
+     * <uses-permission xmlns:tools="http://schemas.android.com/tools"
+     * android:name="android.permission.PACKAGE_USAGE_STATS"
      * tools:ignore="ProtectedPermissions" />
      * 3. 打开手机设置，点击安全-高级，在有权查看使用情况的应用中，为这个App打上勾
      *
@@ -146,6 +149,7 @@ public class BackgroundUtil {
             }
             return false;
         }
+
         Collections.sort(usageStats, mRecentComp);
         String currentTopPackage = usageStats.get(0).getPackageName();
         if (currentTopPackage.equals(packageName)) {
@@ -193,7 +197,7 @@ public class BackgroundUtil {
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-            Toast.makeText(context, R.string.accessbiliityNo, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, R.string.accessbiliityNo, Toast.LENGTH_SHORT).show();
             return false;
         }
     }

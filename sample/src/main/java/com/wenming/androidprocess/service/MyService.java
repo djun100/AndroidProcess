@@ -49,6 +49,7 @@ public class MyService extends Service {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         initContentData();
         startNotification();
+        stillJudge();
     }
 
 
@@ -118,5 +119,22 @@ public class MyService extends Service {
         return BackgroundUtil.isForeground(mContext, Features.BGK_METHOD, mContext.getPackageName());
     }
 
+    private void stillJudge(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    boolean isForeground=BackgroundUtil.isForeground(mContext, BackgroundUtil.BKGMETHOD_GETUSAGESTATS, mContext.getPackageName());
+//                    boolean isForeground=BackgroundUtil.isForeground(mContext, BackgroundUtil.BKGMETHOD_GETACCESSIBILITYSERVICE, mContext.getPackageName());
+                    Log.e("tag","isForeground:"+isForeground);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 
+    }
 }
